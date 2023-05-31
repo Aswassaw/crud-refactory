@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
-const books = require("../data/books.json");
 const { success, failed } = require("../utils/createResponse");
+
+let books = require("../data/books.json");
 
 module.exports = {
   getAllBook: (req, res) => {
@@ -36,6 +37,34 @@ module.exports = {
         code: 200,
         payload: book[0],
         message: "Select Book By Id Success",
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+  insertBook: (req, res) => {
+    try {
+      const { author, country, language, pages, title, year, synopsis } = req.body;
+      const newBook = {
+        id: uuidv4(),
+        author,
+        country,
+        language,
+        pages,
+        title,
+        year,
+        synopsis,
+      };
+      books = [...books, newBook];
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: "Insert Book Success",
       });
     } catch (error) {
       failed(res, {
