@@ -48,7 +48,8 @@ module.exports = {
   },
   insertBook: (req, res) => {
     try {
-      const { author, country, language, pages, title, year, synopsis } = req.body;
+      const { author, country, language, pages, title, year, synopsis } =
+        req.body;
       const newBook = {
         id: uuidv4(),
         author,
@@ -65,6 +66,36 @@ module.exports = {
         code: 200,
         payload: null,
         message: "Insert Book Success",
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+  updateBookById: (req, res) => {
+    try {
+      const { id } = req.params;
+      const { author, country, language, pages, title, year, synopsis } =
+        req.body;
+      const newBookUpdate = {
+        id,
+        author,
+        country,
+        language,
+        pages,
+        title,
+        year,
+        synopsis,
+      };
+      books = [...books.filter((book) => book.id !== id), newBookUpdate];
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: "Update Book Success",
       });
     } catch (error) {
       failed(res, {
