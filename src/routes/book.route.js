@@ -1,15 +1,8 @@
 const express = require("express");
-const { success } = require("../utils/createResponse");
-const books = require('../data/books.json');
+const { getAllBook, getBookById } = require("../controllers/book.controller");
 
 const router = express.Router();
 
-router.get("/books", (req, res) => {
-  success(res, {
-    code: 200,
-    payload: books,
-    message: "Select Books Success",
-  });
-});
+router.get("/books", getAllBook).get("/books/:id", getBookById);
 
 module.exports = router;
