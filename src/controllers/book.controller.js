@@ -48,8 +48,7 @@ module.exports = {
   },
   insertBook: (req, res) => {
     try {
-      const { author, country, language, pages, title, year, synopsis } =
-        req.body;
+      const { author, country, language, pages, title, year, synopsis } = req.body;
       const newBook = {
         id: uuidv4(),
         author,
@@ -63,7 +62,7 @@ module.exports = {
       books = [...books, newBook];
 
       success(res, {
-        code: 200,
+        code: 201,
         payload: null,
         message: "Insert Book Success",
       });
@@ -78,8 +77,19 @@ module.exports = {
   updateBookById: (req, res) => {
     try {
       const { id } = req.params;
-      const { author, country, language, pages, title, year, synopsis } =
-        req.body;
+      const { author, country, language, pages, title, year, synopsis } = req.body;
+
+      const book = books.filter((book) => book.id === id);
+
+      if (!book.length) {
+        failed(res, {
+          code: 404,
+          payload: `Book With Id ${id} Not Found`,
+          message: "Update Book Failed",
+        });
+        return;
+      }
+
       const newBookUpdate = {
         id,
         author,
@@ -96,6 +106,36 @@ module.exports = {
         code: 200,
         payload: null,
         message: "Update Book Success",
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+  deleteBookById: (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const book = books.filter((book) => book.id === id);
+
+      if (!book.length) {
+        failed(res, {
+          code: 404,
+          payload: `Book With Id ${id} Not Found`,
+          message: "Delete Book Failed",
+        });
+        return;
+      }
+
+      books = [...books.filter((book) => book.id !== id)];
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: "Delete Book Success",
       });
     } catch (error) {
       failed(res, {
