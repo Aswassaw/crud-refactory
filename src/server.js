@@ -1,5 +1,8 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
+const { failed } = require("./utils/createResponse");
 
 // deklarasi express
 const app = express();
@@ -17,7 +20,7 @@ app.get("/", (req, res) =>
   )
 );
 // main router
-app.use(require("./routes/product.route"));
+app.use(require("./routes/book.route"));
 // 404 router
 app.use((req, res) => {
   failed(res, {
@@ -28,8 +31,8 @@ app.use((req, res) => {
 });
 
 // running server
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT} with ${NODE_ENV} environment`);
-  console.log(`Visit http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server started on port ${process.env.PORT} with ${process.env.NODE_ENV} environment`);
+  console.log(`Visit http://localhost:${process.env.PORT}`);
   console.log("Developed by Andry Pebrianto");
 });
